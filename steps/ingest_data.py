@@ -17,7 +17,7 @@ class IngestData:
         return pd.read_csv(self.data_path)
     
 @step
-def ingest_data(data_path: str) -> pd.DataFrame:
+def ingest_df(data_path: str) -> pd.DataFrame:
     
     """
     Ingesting data from the data path
