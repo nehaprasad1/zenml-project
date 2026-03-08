@@ -1,0 +1,2 @@
+install zenml
+initialize zenml using zenml init then do zenml up to start the server 
