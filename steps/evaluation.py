@@ -1,12 +1,16 @@
 import  logging
 from zenml import step
 import pandas as pd
+from zenml.client import Client
 from typing import Tuple
 from typing_extensions import Annotated
 from src.evaluation import MSE ,R2Score , RMSE
 from sklearn.base import RegressorMixin
+import mlflow
+experiment_tracker = Client().active_stack.experiment_tracker
 
-@step
+
+@step(experiment_tracker=experiment_tracker.name)
 def evaluate_model(
     model: RegressorMixin, 
     x_test: pd.DataFrame, 
@@ -29,8 +33,10 @@ def evaluate_model(
         # Using the MSE class for mean squared error calculation
         mse_class = MSE()
         mse = mse_class.calculate_score(y_test, prediction)
+        mlflow.log_metric("mse",mse)
         r2_class = R2Score()
         r2_score = r2_class.calculate_score(y_test, prediction)
+        mlflow.log_metric("r2_score",r2_score)
         return r2_score, mse
     except Exception as e:
         logging.error("Error in Evaluating Model step: {}".format(e))
